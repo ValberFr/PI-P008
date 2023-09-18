@@ -1,58 +1,50 @@
 #include <iostream>
+#include <vector>
 #include <cstdlib>
 #include <ctime>
-#include <string>
-#include <vector>
-#include <algorithm>
 
 using namespace std;
 
-const int numStrings = 10;
-const int tamString = 10;
+const int larguraImagem = 640;
+const int alturaImagem = 480;
+const int numeroIntensidades = 256;
 
-// Função para gerar uma letra minúscula aleatória
-char gerarLetraAleatoria() {
-    return 'a' + rand() % 26;
+// a. Função para gerar uma intensidade aleatória entre 0 e 255
+int gerarIntensidadeAleatoria() {
+    return rand() % numeroIntensidades;
 }
 
-// Função para gerar uma string aleatória
-string gerarStringAleatoria() {
-    string str;
-    for (int i = 0; i < tamString; i++) {
-        str += gerarLetraAleatoria();
-    }
-    return str;
-}
+// b. Função para construir o histograma a partir da imagem
+vector<int> construirHistograma(const vector<vector<int>>& imagem) {
+    vector<int> histograma(numeroIntensidades, 0);
 
-// Função para transformar o primeiro caractere em maiúscula
-string primeiraLetraMaiuscula(const string& str) {
-    string result = str;
-    if (!str.empty()) {
-        result[0] = toupper(result[0]);
+    for (int y = 0; y < alturaImagem; y++) {
+        for (int x = 0; x < larguraImagem; x++) {
+            int intensidade = imagem[y][x];
+            histograma[intensidade]++;
+        }
     }
-    return result;
+
+    return histograma;
 }
 
 int main() {
     srand(time(nullptr));
 
-    // Gerar uma lista de 10 strings aleatórias
-    vector<string> strings(numStrings);
-    for (int i = 0; i < numStrings; i++) {
-        strings[i] = gerarStringAleatoria();
+    // Simule a captura de uma imagem com intensidades aleatórias
+    vector<vector<int>> imagem(alturaImagem, vector<int>(larguraImagem));
+    for (int y = 0; y < alturaImagem; y++) {
+        for (int x = 0; x < larguraImagem; x++) {
+            imagem[y][x] = gerarIntensidadeAleatoria();
+        }
     }
 
-    // Substituir o primeiro caractere de cada string por maiúscula
-    for (int i = 0; i < numStrings; i++) {
-        strings[i] = primeiraLetraMaiuscula(strings[i]);
-    }
+    // Construa o histograma da imagem
+    vector<int> histograma = construirHistograma(imagem);
 
-    // Ordenar as strings em ordem alfabética
-    sort(strings.begin(), strings.end());
-
-    // Imprimir as strings
-    for (int i = 0; i < numStrings; i++) {
-        cout << strings[i] << endl;
+    // Imprima o histograma
+    for (int i = 0; i < numeroIntensidades; i++) {
+        cout << "Intensidade " << i << ": " << histograma[i] << " pixels" << endl;
     }
 
     return 0;
