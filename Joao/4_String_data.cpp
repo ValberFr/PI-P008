@@ -11,3 +11,6 @@ int main(){
   cin >> data;
 
   
+  return 0;
+}
+  
